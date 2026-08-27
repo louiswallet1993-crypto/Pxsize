@@ -1,0 +1,115 @@
+{
+  "name": "pxsize",
+  "version": "2.0.0",
+  "description": "Transformez vos images et vidéos en créations tramées, pixelisées ou graphiques.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/louiswallet1993-crypto/Pxsize.git"
+  },
+  "homepage": "https://github.com/louiswallet1993-crypto/Pxsize#readme",
+  "bugs": {
+    "url": "https://github.com/louiswallet1993-crypto/Pxsize/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "main.js",
+  "author": "Rastro",
+  "scripts": {
+    "start": "electron .",
+    "check": "node scripts/check.cjs",
+    "smoke": "node scripts/smoke.cjs",
+    "smoke:packaged": "node scripts/smoke.cjs --packaged",
+    "build-win": "electron-builder --win --x64 --publish never",
+    "build-mac": "electron-builder --mac --publish never",
+    "build-linux": "electron-builder --linux --x64 --publish never",
+    "release:prepare": "node scripts/prepare-release.cjs"
+  },
+  "build": {
+    "appId": "com.rastro.pxsize",
+    "productName": "PXSize",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "src/**/*",
+      "styles/**/*",
+      "ASSETS/IMG/**/*",
+      "ASSETS/FONTS/**/*",
+      "build/icon.*",
+      "package.json",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "asarUnpack": [
+      "node_modules/ffmpeg-static/**",
+      "node_modules/fluent-ffmpeg/**"
+    ],
+    "win": {
+      "artifactName": "PXSize-${version}-Windows-Setup.${ext}",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": false,
+      "perMachine": false,
+      "shortcutName": "PXSize",
+      "uninstallDisplayName": "PXSize"
+    },
+    "mac": {
+      "artifactName": "PXSize-${version}-macOS-${arch}.${ext}",
+      "icon": "build/icon.png",
+      "category": "public.app-category.graphics-design",
+      "identity": null,
+      "target": [
+        "dmg"
+      ]
+    },
+    "artifactName": "PXSize-${version}-${os}-${arch}.${ext}",
+    "dmg": {
+      "title": "PXSize ${version}"
+    },
+    "linux": {
+      "artifactName": "PXSize-${version}-Linux-${arch}.${ext}",
+      "icon": "build/icon.png",
+      "category": "Graphics",
+      "synopsis": "Dithering temps reel pour images et videos",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "tar.gz",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.0.0",
+    "playwright-core": "1.62.1",
+    "png-to-ico": "^3.0.1"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.3.0",
+    "fluent-ffmpeg": "^2.1.3"
+  }
+}

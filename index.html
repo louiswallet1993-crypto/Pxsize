@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="bright">
+<head>
+<meta charset="UTF-8">
+<title>PXSize</title>
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══ COLONNE DE GAUCHE ══════════════════════════════════════ -->
+  <div class="rail">
+    <img class="logo" src="ASSETS/IMG/LOGO.png" alt="PXSize">
+
+    <div class="panel">
+
+      <!-- Algorithme -->
+      <div class="grp">
+        <div class="lbl">ALGORITHM</div>
+        <select id="algo-select" class="algo-select">
+          <option value="halftone">Half tone</option>
+          <option value="bitmap">Bitmap</option>
+          <option value="floyd">Floyd-Steinberg</option>
+          <option value="bayer2">Bayer 2×2</option>
+          <option value="bayer4">Bayer 4×4</option>
+          <option value="bayer8">Bayer 8×8</option>
+          <option value="digits">Random Digits</option>
+          <option value="lines">Line Warp</option>
+        </select>
+      </div>
+
+      <!-- Mode B&W / Color -->
+      <div class="modes">
+        <button id="btn-bw" class="mode-btn is-active" title="Black &amp; white"></button>
+        <button id="btn-color" class="mode-btn" title="Color"></button>
+      </div>
+
+      <!-- Transparence -->
+      <label class="check-row" id="alpha-row" title="Keep the source transparency">
+        <input type="checkbox" id="alpha-check">
+        <span class="check-box"></span>
+        <span class="check-lbl">ALPHA</span>
+      </label>
+
+      <!-- Direction (Line Warp uniquement) -->
+      <div class="grp" id="lines-dir-group" hidden>
+        <div class="lbl">DIRECTION</div>
+        <div class="dir-btns">
+          <button id="dir-h" class="dir-btn is-active">HORIZONTAL</button>
+          <button id="dir-v" class="dir-btn">VERTICAL</button>
+        </div>
+      </div>
+
+      <!-- Size -->
+      <div class="grp">
+        <div class="lbl">SIZE</div>
+        <div class="slider-row">
+          <input type="range" id="size-slider" min="2" max="60" value="31">
+          <span class="slider-val" id="size-val">31</span>
+        </div>
+      </div>
+
+      <!-- Distortion (Line Warp uniquement) -->
+      <div class="grp" id="distortion-group" hidden>
+        <div class="lbl">DISTORTION</div>
+        <div class="slider-row">
+          <input type="range" id="distortion-slider" min="0" max="100" value="50">
+          <span class="slider-val" id="distortion-val">50</span>
+        </div>
+      </div>
+
+      <!-- Threshold (B&W) -->
+      <div class="grp" id="threshold-group">
+        <div class="lbl">THRESHOLD</div>
+        <div class="slider-row">
+          <input type="range" id="threshold-slider" min="0" max="100" value="50">
+          <span class="slider-val" id="threshold-val">50</span>
+        </div>
+      </div>
+
+      <!-- Dither factor (Color) -->
+      <div class="grp" id="dither-group" hidden>
+        <div class="lbl">DITHER FACTOR</div>
+        <div class="slider-row">
+          <input type="range" id="dither-slider" min="0" max="100" value="50">
+          <span class="slider-val" id="dither-val">50</span>
+        </div>
+      </div>
+
+      <!-- Palette (Color) -->
+      <div class="grp" id="palette-group" hidden>
+        <div class="lbl">Palette</div>
+        <div class="palette-list" id="palette-list"></div>
+        <button class="pal-add" id="pal-add" title="Add color">+</button>
+      </div>
+
+    </div>
+
+    <!-- Poubelle + export -->
+    <div class="bottom">
+      <button class="trash-btn" id="trash-btn" title="Clear all">
+        <svg viewBox="0 0 102 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="11" y="12" width="80" height="75.6842" stroke="currentColor" stroke-width="2"/>
+          <path d="M35.7141 36.7206H68.7961L65.7581 73.1815H38.7522L35.7141 36.7206Z" stroke="currentColor" stroke-width="2"/>
+          <path d="M45.3108 73.6477L42.6399 36.7889M59.7338 73.6477L61.8705 36.7889M52.2552 73.6477V36.2548" stroke="currentColor" stroke-width="2"/>
+          <path d="M67.2036 29.2421L68.6743 33.6522H35.1245L36.5942 29.2421H67.2036Z" stroke="currentColor" stroke-width="2"/>
+          <path d="M60.8022 28.7762L58.1312 26.1053H46.3792L43.7083 28.7762" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+      <button class="export-btn" id="export-btn" disabled>EXPORT</button>
+    </div>
+  </div>
+
+  <!-- ══ PREVIEW ════════════════════════════════════════════════ -->
+  <main class="preview" id="preview-area">
+    <div class="drop-zone" id="drop-zone">
+      <div class="drop-arrow">↑</div>
+      <div class="drop-text">Drag &amp; drop an image or a video here</div>
+      <div class="drop-formats">JPG, PNG, GIF, WEBP _ MP4, MOV, AVI</div>
+    </div>
+
+    <canvas id="preview-canvas"></canvas>
+
+    <div class="processing" id="processing">
+      <div class="processing-dots">
+        <div class="processing-dot"></div>
+        <div class="processing-dot"></div>
+        <div class="processing-dot"></div>
+      </div>
+    </div>
+
+    <div class="video-controls" id="video-controls">
+      <button class="play-pause-btn" id="play-pause-btn">▶</button>
+      <div class="video-track" id="video-track">
+        <div class="video-fill" id="video-fill" style="width:0%"></div>
+      </div>
+      <div class="video-time" id="video-time">0:00 / 0:00</div>
+    </div>
+  </main>
+
+</div>
+
+<!-- ══ TOGGLE DE THÈME ═════════════════════════════════════════ -->
+<div class="theme-toggle">
+  <!-- Lune = dark. Pastille claire, croissant sombre. -->
+  <button class="theme-btn theme-btn--light" id="theme-dark" title="Dark mode">
+    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10,4 A6,6 0 1,0 10,16 A7,7 0 0,1 10,4 Z" fill="currentColor"/>
+    </svg>
+  </button>
+  <!-- Rond plein = bright. Pastille sombre, disque clair. -->
+  <button class="theme-btn theme-btn--dark is-active" id="theme-bright" title="Bright mode">
+    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10" cy="10" r="5.5" fill="currentColor"/>
+    </svg>
+  </button>
+</div>
+
+<!-- ══ INSTAGRAM ═══════════════════════════════════════════════ -->
+<button class="ig-btn" id="ig-btn" title="@rastrolastronot">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+    <circle cx="12" cy="12" r="4.5"/>
+    <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+  </svg>
+</button>
+
+<!-- ══ MODALE COLOR PICKER ═════════════════════════════════════ -->
+<div class="overlay" id="picker-overlay">
+  <div class="modal picker-modal">
+    <div class="picker-canvases">
+      <canvas id="spectrum-canvas" width="220" height="180"></canvas>
+      <canvas id="brightness-canvas" width="20" height="180"></canvas>
+      <div id="color-preview"></div>
+    </div>
+    <div class="hex-row">
+      <div class="hex-label">HEX COLOR</div>
+      <input type="text" id="hex-input" value="#EAD1C5" maxlength="7" spellcheck="false">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="picker-cancel">CANCEL</button>
+      <button class="btn-solid" id="picker-apply">APPLY</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODALE DE CONFIRMATION ══════════════════════════════════ -->
+<div class="overlay" id="confirm-overlay">
+  <div class="modal confirm-modal">
+    <p>Are you sure?</p>
+    <div class="modal-actions">
+      <button class="btn-solid" id="confirm-yes">YES</button>
+      <button class="btn-ghost" id="confirm-no">NO</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODALE DE PROGRESSION ═══════════════════════════════════ -->
+<div class="overlay" id="progress-overlay">
+  <div class="modal progress-modal">
+    <p id="progress-label">Exporting…</p>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+</div>
+
+<!-- Élément vidéo source, hors écran -->
+<video id="source-video" style="display:none;position:absolute;top:-9999px" muted playsinline></video>
+
+<!-- ══ SCRIPTS (ordre significatif) ════════════════════════════ -->
+<script src="src/engine.js"></script>
+<script src="src/engine-client.js"></script>
+<script src="src/utils.js"></script>
+<script src="src/state.js"></script>
+<script src="src/dom.js"></script>
+<script src="src/render.js"></script>
+<script src="src/theme.js"></script>
+<script src="src/ui/fx.js"></script>
+<script src="src/ui/controls.js"></script>
+<script src="src/ui/palette.js"></script>
+<script src="src/ui/picker.js"></script>
+<script src="src/ui/files.js"></script>
+<script src="src/ui/video.js"></script>
+<script src="src/ui/zoom.js"></script>
+<script src="src/ui/modals.js"></script>
+<script src="src/export.js"></script>
+<script src="src/app.js"></script>
+
+</body>
+</html>

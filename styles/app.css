@@ -1,0 +1,594 @@
+/* ══════════════════════════════════════════════════════════════════
+   PXSize 2.0 — layout + composants
+   Géométrie relevée sur les maquettes (frame de référence 1440×1024).
+   ══════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Tektur', sans-serif;
+  font-size: 13px;
+  user-select: none;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────────────── */
+.app { display: flex; height: 100vh; width: 100vw; }
+
+/* Colonne de gauche : largeur FIXE, ne bouge pas quand la fenêtre grandit */
+.rail {
+  position: relative;
+  width: 430px;
+  min-width: 430px;
+  flex: 0 0 430px;
+}
+
+/* ── LOGO ───────────────────────────────────────────────────────── */
+/* Positionné pour que sa zone opaque tombe à x35→410, y15→610.
+   Le PNG a des marges transparentes (bbox opaque 573×916 dans 659×950),
+   d'où le décalage et la taille apparente plus grands que le rendu. */
+.logo {
+  position: absolute;
+  left: 7px;
+  top: 4px;
+  width: 431px;
+  height: 617px;
+  pointer-events: none;
+  filter: invert(var(--art-invert));
+}
+
+/* ── PANNEAU DE CONTRÔLES ───────────────────────────────────────── */
+.panel {
+  position: absolute;
+  left: 131px;
+  top: 366px;
+  width: 300px;
+}
+
+.grp { margin-bottom: 22px; }
+
+.lbl {
+  font-family: 'TradeWinds', serif;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  color: var(--fg);
+  margin-bottom: 7px;
+  white-space: nowrap;
+}
+
+/* ── SELECT ALGORITHME ──────────────────────────────────────────── */
+.algo-select {
+  width: 194px;
+  height: 22px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--fg);
+  border-radius: 0;
+  padding: 0 22px 0 6px;
+  font-family: 'Tektur', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  outline: none;
+  background-image: var(--chevron);
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+}
+.algo-select option { background: var(--bg); color: var(--fg); }
+
+/* ── BOUTONS DE MODE (B&W / COLOR) ──────────────────────────────── */
+/* Les PNG contiennent le label et des marges transparentes
+   (zone opaque 112×76 à l'offset 25,28 dans 162×132). Le background-size
+   et la position recadrent sur cette zone. */
+.modes { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 26px; }
+
+.mode-btn {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  outline-offset: 2px;
+  transition: outline-color 90ms linear;
+  outline: 1px solid transparent;
+}
+.mode-btn.is-active { outline-color: var(--fg); }
+
+#btn-bw {
+  width: 73px; height: 46px;
+  background-image: url('../ASSETS/IMG/BW_BUTTON.png');
+  background-size: 105.6px 79.9px;
+  background-position: -16.3px -17px;
+}
+#btn-color {
+  width: 71px; height: 45px;
+  background-image: url('../ASSETS/IMG/COLOR_BUTTON.png');
+  background-size: 102.7px 78.2px;
+  background-position: -15.9px -16.6px;
+}
+
+/* ── CASE À COCHER (ALPHA) ──────────────────────────────────────── */
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: -18px 0 22px;   /* remonte sous les boutons de mode */
+  cursor: pointer;
+  width: fit-content;
+}
+.check-row input { position: absolute; opacity: 0; width: 0; height: 0; }
+
+.check-box {
+  width: 13px; height: 13px;
+  flex: 0 0 13px;
+  border: 1px solid var(--fg);
+  background: var(--bg);
+  position: relative;
+}
+.check-row input:checked + .check-box::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: var(--fg);
+}
+.check-row:hover .check-box { outline: 1px solid var(--fg); outline-offset: 2px; }
+
+.check-lbl {
+  font-family: 'TradeWinds', serif;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  color: var(--fg);
+}
+
+/* Damier derrière le canvas : rend la transparence visible */
+#preview-canvas.alpha-on {
+  background-image:
+    linear-gradient(45deg, var(--fg-line) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--fg-line) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--fg-line) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--fg-line) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
+/* ── TOGGLE DIRECTION (Line Warp) ───────────────────────────────── */
+.dir-btns { display: flex; gap: 6px; }
+
+.dir-btn {
+  height: 24px;
+  padding: 0 12px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--fg);
+  border-radius: 0;
+  font-family: 'Tektur', sans-serif;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  transition: background-color 90ms linear, color 90ms linear;
+}
+.dir-btn.is-active { background: var(--fg); color: var(--bg); }
+
+/* ── SLIDERS ────────────────────────────────────────────────────── */
+.slider-row { display: flex; align-items: center; gap: 11px; }
+
+input[type='range'] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 12px;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  height: 1px;
+  background: var(--fg);
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 9px;
+  height: 9px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: var(--thumb-fill);
+  border: 1px solid var(--fg);
+  transition: transform 90ms ease;
+}
+input[type='range']::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+.slider-val {
+  width: 26px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+
+/* ── PALETTE ────────────────────────────────────────────────────── */
+.palette-list { margin-bottom: 6px; }
+
+.pal-row {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  margin-bottom: 4px;   /* pitch 24px */
+}
+.pal-swatch {
+  width: 20px; height: 20px;
+  flex: 0 0 20px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 90ms ease;
+}
+.pal-swatch:hover { transform: scale(1.12); }
+
+.pal-weight { flex: 1; margin-left: 38px; margin-right: 21px; }
+
+.pal-val {
+  width: 20px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.pal-del {
+  width: 14px;
+  background: none;
+  border: none;
+  color: var(--fg);
+  font-family: 'Tektur', sans-serif;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.75;
+}
+.pal-del:hover { opacity: 1; }
+
+.pal-add {
+  width: 16px; height: 16px;
+  background: var(--bg);
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  font-family: 'Tektur', sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.pal-add:hover { background: var(--fg); color: var(--bg); }
+
+/* ── BAS DE COLONNE : POUBELLE + EXPORT ─────────────────────────── */
+.bottom {
+  position: absolute;
+  left: 131px;
+  bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.trash-btn {
+  width: 38px; height: 37px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.trash-btn svg { width: 100%; height: 100%; display: block; }
+.trash-btn:hover { opacity: 0.65; }
+
+.export-btn {
+  width: 220px; height: 36px;
+  background: var(--fg);
+  color: var(--bg);
+  border: none;
+  border-radius: 0;
+  font-family: 'Tektur', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: opacity 120ms linear;
+}
+.export-btn:hover:not(:disabled) { opacity: 0.82; }
+.export-btn:disabled { opacity: 0.28; cursor: not-allowed; }
+
+/* ── TOGGLE DE THÈME ────────────────────────────────────────────── */
+/* Deux carrés : le gauche est un aperçu du thème clair, le droit du
+   thème sombre. Chacun ne prend une bordure que si son fond est le même
+   que celui de la page (sinon il se détacherait tout seul). */
+.theme-toggle {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  gap: 4px;
+  z-index: 30;
+}
+
+.theme-btn {
+  width: 20px; height: 20px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  outline: 1px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 90ms linear;
+}
+.theme-btn svg { width: 100%; height: 100%; display: block; }
+.theme-btn.is-active { outline-color: var(--fg); }
+
+/* La pastille garde ses couleurs quel que soit le thème ; elle ne prend
+   une bordure que si son fond est identique à celui de la page. */
+.theme-btn--light { background: #ffffff; color: #000000; }
+.theme-btn--dark  { background: #000000; color: #ffffff; }
+
+:root[data-theme='bright'] .theme-btn--light { border-color: #000000; }
+:root[data-theme='dark']   .theme-btn--dark  { border-color: #ffffff; }
+
+/* ── INSTAGRAM ──────────────────────────────────────────────────── */
+.ig-btn {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--fg);
+  opacity: 0.45;
+  transition: opacity 120ms linear;
+  z-index: 20;
+}
+.ig-btn:hover { opacity: 1; }
+
+/* ── ZONE DE PREVIEW ────────────────────────────────────────────── */
+.preview {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+#preview-canvas {
+  max-width: 100%;
+  max-height: 100%;
+  display: none;
+  object-fit: contain;
+}
+
+.drop-zone {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--fg);
+  pointer-events: none;
+  text-align: center;
+}
+.drop-arrow { font-size: 22px; line-height: 1; }
+.drop-text { font-size: 14px; font-weight: 400; }
+.drop-formats { font-size: 10.5px; letter-spacing: 0.6px; color: var(--fg-soft); }
+.drop-zone.drag-over { opacity: 0.55; }
+
+/* ── OVERLAY DE TRAITEMENT ──────────────────────────────────────── */
+.processing {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+.processing.active { display: flex; }
+.processing-dots { display: flex; gap: 6px; }
+.processing-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--fg);
+  animation: pulse 1s ease-in-out infinite;
+}
+.processing-dot:nth-child(2) { animation-delay: 0.2s; }
+.processing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50%      { opacity: 1;   transform: scale(1); }
+}
+
+/* ── CONTRÔLES VIDÉO ────────────────────────────────────────────── */
+.video-controls {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px 16px;
+  background: linear-gradient(transparent, var(--bg) 65%);
+  z-index: 6;
+}
+.video-controls.visible { display: flex; }
+
+.play-pause-btn {
+  width: 30px; height: 30px;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--fg);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-track {
+  flex: 1;
+  height: 3px;
+  background: var(--fg-line);
+  cursor: pointer;
+  position: relative;
+}
+.video-fill {
+  height: 100%;
+  background: var(--fg);
+  pointer-events: none;
+  transition: width 80ms linear;
+}
+.video-time {
+  min-width: 74px;
+  text-align: right;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-soft);
+  flex-shrink: 0;
+}
+
+/* ── MODALES ────────────────────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  backdrop-filter: blur(2px);
+  z-index: 100;
+}
+.overlay.open { display: flex; }
+
+.modal {
+  background: var(--bg);
+  border: 1px solid var(--fg);
+  padding: 20px;
+}
+
+/* Color picker */
+.picker-modal { width: 300px; }
+.picker-canvases { display: flex; gap: 8px; margin-bottom: 12px; }
+#spectrum-canvas { flex: 1; cursor: crosshair; display: block; }
+#brightness-canvas { width: 20px; flex-shrink: 0; cursor: pointer; display: block; }
+#color-preview {
+  width: 44px; height: 44px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  border: 1px solid var(--fg);
+}
+.hex-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+.hex-label {
+  font-family: 'TradeWinds', serif;
+  font-size: 10.5px;
+  letter-spacing: 0.4px;
+}
+#hex-input {
+  width: 100%;
+  height: 30px;
+  padding: 0 10px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--fg);
+  border-radius: 0;
+  font-family: 'Tektur', sans-serif;
+  font-size: 12px;
+  outline: none;
+  text-transform: uppercase;
+}
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+.btn-ghost, .btn-solid {
+  height: 32px;
+  padding: 0 18px;
+  border-radius: 0;
+  font-family: 'Tektur', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: background-color 90ms linear, color 90ms linear;
+}
+.btn-ghost { background: var(--bg); color: var(--fg); border: 1px solid var(--fg); }
+.btn-ghost:hover { background: var(--fg); color: var(--bg); }
+.btn-solid { background: var(--fg); color: var(--bg); border: 1px solid var(--fg); }
+.btn-solid:hover { opacity: 0.82; }
+
+/* Confirmation */
+.confirm-modal { width: 260px; text-align: center; }
+.confirm-modal p { font-size: 14px; margin-bottom: 20px; }
+.confirm-modal .modal-actions { justify-content: center; }
+
+/* Progression d'export */
+.progress-modal { width: 280px; text-align: center; }
+.progress-modal p { font-size: 12px; margin-bottom: 14px; color: var(--fg); }
+.progress-track { width: 100%; height: 3px; background: var(--fg-line); overflow: hidden; }
+.progress-fill { height: 100%; width: 0%; background: var(--fg); transition: width 100ms linear; }
+
+/* ══════════════════════════════════════════════════════════════════
+   ANIMATIONS GLITCH
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Canvas d'onde posé sur un bouton de mode */
+.mode-btn { position: relative; }
+canvas.fx-glitch {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Apparition d'un groupe de contrôles / d'une ligne de palette.
+   steps() donne le côté saccadé plutôt qu'un fondu lisse. */
+@keyframes fx-reveal {
+  0%   { opacity: 0;    clip-path: inset(0 100% 0 0); transform: translateX(-5px); }
+  30%  { opacity: 1;    clip-path: inset(0 46% 0 0);  transform: translateX(3px); }
+  55%  { opacity: 0.35; clip-path: inset(0 62% 0 0);  transform: translateX(-2px); }
+  80%  { opacity: 1;    clip-path: inset(0 8% 0 0);   transform: translateX(1px); }
+  100% { opacity: 1;    clip-path: inset(0 0 0 0);    transform: none; }
+}
+.fx-reveal { animation: fx-reveal 260ms steps(2, end) both; }
+
+/* Voile plein écran de la transition de thème */
+canvas.fx-theme {
+  position: fixed;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Petite saute latérale de toute l'UI pendant la bascule */
+@keyframes fx-theme-shift {
+  0%, 100% { transform: none; }
+  22%      { transform: translateX(-3px); }
+  46%      { transform: translateX(4px); }
+  70%      { transform: translateX(-2px); }
+}
+.fx-theme-shift body { animation: fx-theme-shift 420ms steps(1, end) both; }
+
+/* ── ACCESSIBILITÉ ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, canvas.fx-glitch { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  canvas.fx-theme { display: none !important; }
+}

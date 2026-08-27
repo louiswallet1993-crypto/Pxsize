@@ -1,0 +1,29 @@
+name: Signaler un problème
+description: Quelque chose ne fonctionne pas dans PXSize ? Dites-nous ce qui s'est passé.
+title: "[Problème] "
+body:
+  - type: dropdown
+    id: system
+    attributes:
+      label: Votre ordinateur
+      options:
+        - Windows
+        - Mac Apple Silicon (M1, M2…)
+        - Mac Intel
+        - Linux
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version de PXSize et du système
+      placeholder: "Exemple : PXSize 2.0.0, Windows 11"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Que s'est-il passé ?
+      description: Indiquez ce que vous avez fait, le résultat attendu et le message affiché. Une capture peut aider ; ne joignez pas de fichiers privés.
+    validations:
+      required: true

@@ -1,0 +1,37 @@
+# Dépendances et fichiers générés
+node_modules/
+dist/
+release/
+output/
+coverage/
+.cache/
+*.log
+*.tsbuildinfo
+
+# Configuration locale et secrets
+.env
+.env.*
+!.env.example
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+*.mobileprovision
+
+# Éditeurs et système
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.tmp
+
+# Notes de travail et maquettes non nécessaires à l'application
+.claude/
+.codex/
+CLAUDE.md
+ASSETS/REF/
+ASSETS/TEST/
+/=

@@ -1,0 +1,68 @@
+/* ══════════════════════════════════════════════════════════════════
+   PXSize 2.0 — fontes + tokens de thème
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── FONTES ───────────────────────────────────────────────────────
+   Trade Winds : labels de section uniquement. Elle est nativement
+   penchée — ne JAMAIS lui ajouter font-style: italic par-dessus.
+   Tektur : tout le reste.                                          */
+
+@font-face {
+  font-family: 'TradeWinds';
+  src: url('../ASSETS/FONTS/TRADE%20WINDS/TradeWinds-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Tektur';
+  src: url('../ASSETS/FONTS/TEKTUR/Tektur-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Tektur';
+  src: url('../ASSETS/FONTS/TEKTUR/Tektur-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Tektur';
+  src: url('../ASSETS/FONTS/TEKTUR/Tektur-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Tektur';
+  src: url('../ASSETS/FONTS/TEKTUR/Tektur-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: block;
+}
+
+/* ── THÈMES ───────────────────────────────────────────────────────
+   Strictement monochromes et inversés l'un de l'autre.             */
+
+:root,
+:root[data-theme='bright'] {
+  --bg: #ffffff;
+  --fg: #000000;
+  --fg-soft: rgba(0, 0, 0, 0.45);
+  --fg-line: rgba(0, 0, 0, 0.18);
+
+  /* Le logo et la poubelle sont des sources noires : pas d'inversion */
+  --art-invert: 0;
+  /* Curseur de slider creux en clair, plein en sombre */
+  --thumb-fill: var(--bg);
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M0 0l4.5 6L9 0z' fill='black'/%3E%3C/svg%3E");
+}
+
+:root[data-theme='dark'] {
+  --bg: #000000;
+  --fg: #ffffff;
+  --fg-soft: rgba(255, 255, 255, 0.45);
+  --fg-line: rgba(255, 255, 255, 0.22);
+
+  --art-invert: 1;
+  --thumb-fill: var(--fg);
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M0 0l4.5 6L9 0z' fill='white'/%3E%3C/svg%3E");
+}
