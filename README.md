@@ -3,7 +3,7 @@
 <p align="center">Des images et des vidéos. Des pixels. Votre style.</p>
 
 <p align="center">
-  <video src="https://github.com/user-attachments/assets/96368212-e456-413e-8887-594e8654dc04" controls width="360"></video>
+  <video src="https://github.com/louiswallet1993-crypto/Pxsize/raw/refs/heads/main/docs/media/PXSize-demo.mp4" controls width="360"></video>
 </p>
 
 <p align="center">
