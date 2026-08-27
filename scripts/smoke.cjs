@@ -117,6 +117,14 @@ async function waitForFile(file) {
     await page.locator('#theme-dark').click();
     await page.waitForFunction(() => !document.documentElement.classList.contains('fx-theme-shift'));
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
+    report.viewport = await page.evaluate(() => {
+      const palette = document.querySelector('#pal-add').getBoundingClientRect();
+      const button = document.querySelector('#export-btn').getBoundingClientRect();
+      return { width: innerWidth, height: innerHeight, paletteBottom: palette.bottom,
+        exportTop: button.top, fits: palette.bottom < button.top && button.bottom <= innerHeight };
+    });
+    report.layoutFits = report.viewport.fits;
+    if (!report.layoutFits) console.warn('Interface à valider : la palette déborde ou chevauche le bouton EXPORT dans cette fenêtre.');
     await page.screenshot({ path: path.join(output, '02-image.png') });
     const png = path.join(runDir, 'export.png');
     await saveTo(png);

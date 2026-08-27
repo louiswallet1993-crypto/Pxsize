@@ -4,10 +4,11 @@ Une release est la page sur laquelle les utilisateurs téléchargent l'applicati
 
 ## 1. Préparer
 
-1. Mettre à jour la version de `package.json` et de `package-lock.json` ensemble, par exemple avec `npm version patch --no-git-tag-version`.
-2. Mettre à jour les liens de téléchargement du README et écrire `docs/releases/vX.Y.Z.md` en prenant la version précédente comme modèle.
-3. Exécuter `npm run check` et `npm run smoke`, puis committer avec l'identité Git du mainteneur.
-4. Pousser le code sur `main`, sans forcer ni écraser des changements distants.
+1. Valider les plateformes annoncées. `.github/release-platforms.json` autorise actuellement **Windows x64 uniquement** ; ne pas y ajouter Mac ou Linux sans recette préalable.
+2. Mettre à jour la version de `package.json` et de `package-lock.json` ensemble, par exemple avec `npm version patch --no-git-tag-version`.
+3. Mettre à jour les liens de téléchargement du README et écrire `docs/releases/vX.Y.Z.md` en prenant la version précédente comme modèle.
+4. Exécuter `npm run check` et `npm run smoke`, puis committer avec l'identité Git du mainteneur.
+5. Pousser le code sur `main`, sans forcer ni écraser des changements distants.
 
 ## 2. Fabriquer et tester
 
@@ -25,15 +26,15 @@ Le lancement du workflow ne crée aucun tag ni aucune release. La publication es
 
 ## 3. Rassembler les fichiers
 
-Vérifier le compte GitHub actif et le SHA du workflow, puis récupérer uniquement les artefacts `PXSize-*` :
+Vérifier le compte GitHub actif et le SHA du workflow, puis récupérer uniquement les artefacts des plateformes autorisées. Pour la première release :
 
 ```sh
 gh api user --jq .login
-gh run download RUN_ID --repo louiswallet1993-crypto/Pxsize --pattern "PXSize-*" --dir release/downloads
+gh run download RUN_ID --repo louiswallet1993-crypto/Pxsize --pattern "PXSize-Windows" --dir release/downloads
 node scripts/prepare-release.cjs --collect release/downloads release/publish
 ```
 
-Le script refuse un ensemble incomplet, des fichiers inattendus, des doublons, un SHA incohérent ou une empreinte incorrecte. Le checkout doit être sur le commit exact testé. Le dossier de sortie doit être vide. Ne pas réutiliser les artefacts d'une autre exécution.
+Le script refuse une plateforme non autorisée, un ensemble incomplet, une fenêtre de test trop petite pour la palette, des fichiers inattendus, des doublons, un SHA incohérent ou une empreinte incorrecte. Le checkout doit être sur le commit exact testé. Le dossier de sortie doit être vide. Ne pas réutiliser les artefacts d'une autre exécution.
 
 ## 4. Publier
 

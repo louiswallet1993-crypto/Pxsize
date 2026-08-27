@@ -12,8 +12,11 @@ const targets = {
   'win32-x64': [`${prefix}-Windows-Setup.exe`],
   'darwin-arm64': [`${prefix}-macOS-arm64.dmg`],
   'darwin-x64': [`${prefix}-macOS-x64.dmg`],
-  'linux-x64': [`${prefix}-Linux-x64.AppImage`, `${prefix}-Linux-x64.tar.gz`]
+  'linux-x64': [`${prefix}-Linux-x86_64.AppImage`, `${prefix}-Linux-x64.tar.gz`]
 };
+const publishedTargets = require('../.github/release-platforms.json');
+assert.ok(publishedTargets.length > 0 && publishedTargets.every(key => targets[key]), 'Plateformes de publication invalides');
+assert.equal(new Set(publishedTargets).size, publishedTargets.length, 'Plateformes en double');
 const sha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
 assert.match(sha, /^[a-f0-9]{40}$/);
 
@@ -42,10 +45,11 @@ if (process.argv[2] === '--collect') {
     assert.ok(name, `Manifeste absent : ${entry.name}`);
     const manifest = json(path.join(dir, name));
     const key = `${manifest.platform}-${manifest.arch}`;
-    assert.ok(targets[key], `Cible inconnue : ${key}`);
+    assert.ok(publishedTargets.includes(key), `Cible non autorisée pour cette release : ${key}`);
     assert.equal(manifest.version, version);
     assert.equal(manifest.sha, sha, 'Les livrables doivent provenir du commit courant');
     assert.equal(manifest.testsPassed, true);
+    assert.equal(manifest.layoutFits, true, 'Vérification visuelle de la fenêtre non satisfaite');
     assert.deepEqual(manifest.assets.map(asset => asset.name).sort(), [...targets[key]].sort());
     assert.deepEqual(files.sort(), [name, ...targets[key]].sort(), `Contenu inattendu : ${entry.name}`);
     for (const asset of manifest.assets) {
@@ -56,7 +60,7 @@ if (process.argv[2] === '--collect') {
     }
     manifests.push({ key, dir, manifest });
   }
-  assert.deepEqual(manifests.map(item => item.key).sort(), Object.keys(targets).sort(), 'Il faut les quatre cibles, sans doublon');
+  assert.deepEqual(manifests.map(item => item.key).sort(), [...publishedTargets].sort(), 'Il faut toutes les cibles autorisées, sans doublon');
   emptyDir(output);
   const files = [];
   for (const { dir, manifest } of manifests) {
@@ -67,13 +71,12 @@ if (process.argv[2] === '--collect') {
   }
   const notice = `PXSIZE ${version} — PAR RASTRO\n\n` +
     `QUEL FICHIER CHOISIR ?\n` +
-    `Windows : ${targets['win32-x64'][0]}\n` +
-    `Mac avec une puce Apple (M1, M2...) : ${targets['darwin-arm64'][0]}\n` +
-    `Mac Intel : ${targets['darwin-x64'][0]}\n` +
-    `Linux Intel / AMD : ${targets['linux-x64'][0]}\n\n` +
+    publishedTargets.map(key => `${key} : ${targets[key].join(' / ')}`).join('\n') + '\n\n' +
     `Glissez un fichier dans PXSize, choisissez un effet, puis cliquez sur EXPORT.\n` +
     `Images : PNG à leur taille d'origine. Vidéos : MP4 sans son, 30 images/s, largeur maximale 1100 pixels.\n\n` +
-    `L'application n'est pas signée ni notariée. Vérifiez sa provenance et ne désactivez pas vos protections.\n` +
+    `L'application n'est pas signée. Vérifiez sa provenance et ne désactivez pas vos protections.\n` +
+    `Les versions Mac et Linux ne sont pas proposées dans la première release.\n` +
+    `Sur un petit écran, la palette peut être coupée : agrandissez la fenêtre.\n` +
     `Guide : https://github.com/louiswallet1993-crypto/Pxsize/blob/v${version}/docs/INSTALLATION.md\n` +
     `Aide : https://github.com/louiswallet1993-crypto/Pxsize/issues\n\n` +
     `Source code = code pour le développement, pas un installateur.\n` +
@@ -102,6 +105,7 @@ if (process.argv[2] === '--collect') {
   emptyDir(output);
   for (const { name } of assets) fs.copyFileSync(path.join(root, 'dist', name), path.join(output, name), fs.constants.COPYFILE_EXCL);
   fs.writeFileSync(path.join(output, `manifest-${key}.json`), JSON.stringify({ version, sha, platform: process.platform, arch: process.arch,
-    testsPassed: true, checks: report.checks, completedAt: report.completedAt, assets }, null, 2) + '\n');
+    testsPassed: true, layoutFits: report.layoutFits, viewport: report.viewport,
+    checks: report.checks, completedAt: report.completedAt, assets }, null, 2) + '\n');
   console.log(`${key} : ${assets.length} livrable(s) vérifié(s).`);
 }
