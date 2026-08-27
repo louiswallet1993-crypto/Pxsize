@@ -1,0 +1,67 @@
+{
+  "version": "2.0.0",
+  "sha": "410eee47019db0c3e7791230489cb9e9517dbacf",
+  "builds": [
+    {
+      "version": "2.0.0",
+      "sha": "410eee47019db0c3e7791230489cb9e9517dbacf",
+      "platform": "win32",
+      "arch": "x64",
+      "testsPassed": true,
+      "layoutFits": true,
+      "viewport": {
+        "name": "startup-window",
+        "width": 1008,
+        "height": 689,
+        "paletteBottom": 565,
+        "panelBottom": 589,
+        "exportTop": 612.5,
+        "scrollable": true,
+        "fits": true
+      },
+      "layouts": [
+        {
+          "name": "startup-window",
+          "width": 1008,
+          "height": 689,
+          "paletteBottom": 565,
+          "panelBottom": 589,
+          "exportTop": 612.5,
+          "scrollable": true,
+          "fits": true
+        },
+        {
+          "name": "small-window-line-warp",
+          "width": 1008,
+          "height": 652,
+          "paletteBottom": 528,
+          "panelBottom": 552,
+          "exportTop": 575.5,
+          "scrollable": true,
+          "fits": true
+        }
+      ],
+      "checks": [
+        "startup",
+        "bundled-ffmpeg-and-notices",
+        "8-effects-in-bw-and-color",
+        "scrollable-controls-and-palette-in-small-window",
+        "png-export-original-dimensions",
+        "dark-theme",
+        "cancel-save",
+        "clear-content",
+        "reject-unsupported-file",
+        "h264-video-import",
+        "mp4-export-and-decode"
+      ],
+      "completedAt": "2026-08-27T13:30:45.578Z",
+      "assets": [
+        {
+          "name": "PXSize-2.0.0-Windows-Setup.exe",
+          "size": 100436547,
+          "sha256": "2ff1c3a7cbc3c0e5e7b9b14a03c7773c84d1be2caaabc117cb4eb2857f622fd2"
+        }
+      ]
+    }
+  ]
+}

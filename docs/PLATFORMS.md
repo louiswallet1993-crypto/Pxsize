@@ -21,7 +21,7 @@ La [deuxième exécution native](https://github.com/louiswallet1993-crypto/Pxsiz
 
 Le panneau des réglages est désormais défilable et s'arrête au-dessus du bouton EXPORT. Le test reproduit aussi une fenêtre de **1 008 × 652 pixels**, vérifie le défilement jusqu'à la palette avec Line Warp, ajoute une couleur, ouvre son sélecteur et la retire. Une superposition ou un contrôle inaccessible fait échouer le test et bloque la publication.
 
-Le fichier `BUILD-INFO.json` joint à la release identifie le commit et les dimensions réellement testés pour l'installateur distribué. Cette correction commune ne vaut pas validation de l'installation Mac ou Linux.
+Le [manifeste de la version 2.0.0](releases/v2.0.0-build.json), conservé dans le dépôt, identifie le commit et les dimensions réellement testés pour l'installateur distribué. Il n'encombre pas les téléchargements de la release. Cette correction commune ne vaut pas validation de l'installation Mac ou Linux.
 
 ## Ce que les tests ne prouvent pas
 

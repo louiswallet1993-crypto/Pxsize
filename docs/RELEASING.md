@@ -1,6 +1,6 @@
 # Publier une version
 
-Une release est la page sur laquelle les utilisateurs téléchargent l'application. Elle doit contenir les installateurs, une courte explication et les limites connues.
+Une release est la page sur laquelle les utilisateurs téléchargent l'application. Garder **deux ou trois lignes maximum**, avec le téléchargement en premier et un lien vers le guide pour les détails.
 
 ## 1. Préparer
 
@@ -46,10 +46,12 @@ git push origin vX.Y.Z
 gh release create vX.Y.Z --verify-tag --draft --title "PXSize X.Y.Z — À vous de créer" --notes-file docs/releases/vX.Y.Z.md
 ```
 
-Joindre tous les fichiers de `release/publish/` au brouillon depuis GitHub ou avec `gh release upload`. Vérifier leurs noms, leurs tailles, leurs empreintes et les liens du texte. Publier le brouillon une fois l'ensemble complet, puis vérifier les téléchargements publics et le lien **Latest**. Ne jamais déplacer un tag déjà publié.
+Joindre **uniquement les installateurs** de `release/publish/` au brouillon depuis GitHub ou avec `gh release upload`. Pour Windows, le fichier `.exe` doit être le premier téléchargement proposé. Ne pas joindre `BUILD-INFO.json`, `LISEZ-MOI.txt` ou `SHA256SUMS.txt` : ils servent aux vérifications du mainteneur, pas à l'installation.
+
+Vérifier les noms, tailles, empreintes et liens avant publication. Conserver le manifeste dans le dépôt sous `docs/releases/vX.Y.Z-build.json`, dans un commit de documentation après la construction, sans déplacer le tag ni reconstruire un installateur déjà publié. Le SHA du manifeste reste celui du binaire testé. Publier le brouillon une fois l'ensemble complet, puis vérifier les téléchargements publics et le lien **Latest**.
 
 ## Texte pour les utilisateurs
 
-Commencer par « Quel fichier choisir ? », puis décrire les nouveautés en phrases courtes. Expliquer le choix Apple Silicon / Intel. Signaler l'absence de signature, les limites vidéo et ce qui n'a pas été testé manuellement. Ne pas utiliser une liste de commits comme unique description.
+Première ligne : lien vers l'installateur et système compatible. Deuxième ligne : une phrase simple sur l'application ou les nouveautés. Troisième ligne : plateformes indisponibles, absence de signature et lien vers le guide. Les détails techniques, limites vidéo et étapes d'installation restent dans le README et les guides.
 
 Ne pas joindre `node_modules`, les dossiers décompressés, les `.blockmap`, les logs ou les fichiers de test. Les archives « Source code » sont ajoutées automatiquement par GitHub ; préciser qu'elles ne sont pas les applications.
