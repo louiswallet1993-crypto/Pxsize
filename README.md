@@ -3,7 +3,7 @@
 <p align="center">Des images et des vidéos. Des pixels. Votre style.</p>
 
 <p align="center">
-  <video src="https://github.com/louiswallet1993-crypto/Pxsize/raw/refs/heads/main/docs/media/PXSize-demo.mp4" controls width="360"></video>
+  <video src="https://github.com/user-attachments/assets/570825fd-7263-43b2-9f2e-c30e66964ac5" controls width="360"></video>
 </p>
 
 <p align="center">
@@ -20,18 +20,13 @@ Tout se fait sur votre ordinateur, sans compte. Vos images et vidéos ne sont pa
 
 ## Télécharger
 
-Choisissez le fichier qui correspond à votre ordinateur :
+**[Télécharger PXSize pour Windows](https://github.com/louiswallet1993-crypto/Pxsize/releases/download/v2.0.0/PXSize-2.0.0-Windows-Setup.exe)** — Windows 10 ou 11, PC 64 bits Intel / AMD.
 
-| Votre ordinateur | Fichier à télécharger |
-| --- | --- |
-| **Windows 10 ou 11**, 64 bits Intel / AMD | [Installer PXSize pour Windows](https://github.com/louiswallet1993-crypto/Pxsize/releases/download/v2.0.0/PXSize-2.0.0-Windows-Setup.exe) |
-| **Mac avec une puce Apple** (M1, M2, M3…) | [Télécharger pour Mac Apple Silicon](https://github.com/louiswallet1993-crypto/Pxsize/releases/download/v2.0.0/PXSize-2.0.0-macOS-arm64.dmg) |
-| **Mac avec un processeur Intel** | [Télécharger pour Mac Intel](https://github.com/louiswallet1993-crypto/Pxsize/releases/download/v2.0.0/PXSize-2.0.0-macOS-x64.dmg) |
-| **Linux**, 64 bits Intel / AMD | [Télécharger pour Linux](https://github.com/louiswallet1993-crypto/Pxsize/releases/download/v2.0.0/PXSize-2.0.0-Linux-x64.AppImage) |
+**Mac et Linux : en préparation.** Ces versions ne sont pas proposées dans la première release. Les contrôles et points restant à valider sont décrits dans le [suivi des plateformes](docs/PLATFORMS.md).
 
 Pas besoin d'installer Node.js ni de savoir coder. Les fichiers « Source code » proposés par GitHub sont destinés au développement : **ce ne sont pas les applications à installer**.
 
-> PXSize n'a pas encore de signature numérique Windows ni de validation Apple. Une alerte peut donc apparaître à l'ouverture. Consultez le [guide d'installation](docs/INSTALLATION.md) et ne désactivez pas les protections de votre ordinateur.
+> PXSize n'a pas encore de signature numérique Windows. Une alerte peut donc apparaître à l'ouverture. Consultez le [guide d'installation](docs/INSTALLATION.md) et ne désactivez pas les protections de votre ordinateur.
 
 ## Créer en trois étapes
 
@@ -47,6 +42,7 @@ Huit effets sont proposés, avec aperçu interactif, zoom, thème clair ou sombr
 - **Vidéos** : MP4, MOV, AVI et WebM, selon le format vidéo utilisé dans le fichier. Privilégiez un MP4 H.264 si une vidéo ne s'ouvre pas.
 - **Export vidéo** : MP4 à 30 images par seconde, **sans le son d'origine**, avec une largeur maximale de 1 100 pixels. Les longues vidéos peuvent demander du temps et de l'espace disque temporaire.
 - Les boutons de l'application sont en anglais : `SIZE` règle la taille du motif et `EXPORT` enregistre le résultat.
+- L'interface demande de la hauteur : une petite fenêtre peut masquer le bas de la palette. Agrandissez la fenêtre ; une amélioration de l'affichage sur petits écrans reste à faire.
 
 ## Un souci ou une idée ?
 
