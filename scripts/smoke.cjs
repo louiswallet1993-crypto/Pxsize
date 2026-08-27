@@ -97,6 +97,41 @@ async function waitForFile(file) {
       await page.locator('#confirm-yes').click();
       await page.waitForFunction(() => !PX.state.hasContent);
     }
+    async function inspectControls(name) {
+      await page.locator('.panel').hover();
+      await page.mouse.wheel(0, 10000);
+      await page.waitForFunction(() => {
+        const panel = document.querySelector('.panel');
+        return panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 1;
+      });
+      const layout = await page.evaluate(name => {
+        const panel = document.querySelector('.panel');
+        const add = document.querySelector('#pal-add');
+        const exportButton = document.querySelector('#export-btn');
+        const panelRect = panel.getBoundingClientRect();
+        const palette = add.getBoundingClientRect();
+        const button = exportButton.getBoundingClientRect();
+        const hittable = (element, rect) => document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2) === element;
+        return { name, width: innerWidth, height: innerHeight, paletteBottom: palette.bottom,
+          panelBottom: panelRect.bottom, exportTop: button.top,
+          scrollable: panel.scrollHeight > panel.clientHeight,
+          fits: palette.top >= panelRect.top && palette.bottom <= panelRect.bottom &&
+            panelRect.bottom < button.top && button.bottom <= innerHeight &&
+            panel.scrollWidth <= panel.clientWidth && hittable(add, palette) && hittable(exportButton, button) };
+      }, name);
+      assert.equal(layout.fits, true, `Réglages inaccessibles ou superposés à EXPORT : ${JSON.stringify(layout)}`);
+
+      // Vérifie une vraie interaction après le défilement, pas seulement la géométrie.
+      const colors = await page.locator('.pal-row').count();
+      await page.locator('#pal-add').click();
+      assert.equal(await page.locator('.pal-row').count(), colors + 1);
+      await page.locator('.pal-row').last().locator('.pal-swatch').click();
+      await page.locator('#picker-overlay').waitFor({ state: 'visible' });
+      await page.locator('#picker-cancel').click();
+      await page.locator('.pal-row').last().locator('.pal-del').click();
+      assert.equal(await page.locator('.pal-row').count(), colors);
+      return layout;
+    }
 
     await load(imagePath, 'image');
     const algorithms = ['halftone', 'bitmap', 'floyd', 'bayer2', 'bayer4', 'bayer8', 'digits', 'lines'];
@@ -117,15 +152,29 @@ async function waitForFile(file) {
     await page.locator('#theme-dark').click();
     await page.waitForFunction(() => !document.documentElement.classList.contains('fx-theme-shift'));
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
-    report.viewport = await page.evaluate(() => {
-      const palette = document.querySelector('#pal-add').getBoundingClientRect();
-      const button = document.querySelector('#export-btn').getBoundingClientRect();
-      return { width: innerWidth, height: innerHeight, paletteBottom: palette.bottom,
-        exportTop: button.top, fits: palette.bottom < button.top && button.bottom <= innerHeight };
-    });
-    report.layoutFits = report.viewport.fits;
-    if (!report.layoutFits) console.warn('Interface à valider : la palette déborde ou chevauche le bouton EXPORT dans cette fenêtre.');
+    report.viewport = await inspectControls('startup-window');
+    report.layouts = [report.viewport];
     await page.screenshot({ path: path.join(output, '02-image.png') });
+
+    const originalBounds = await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].getBounds());
+    await app.evaluate(({ BrowserWindow }) => {
+      const window = BrowserWindow.getAllWindows()[0];
+      // Reproduit aussi les petits écrans sur lesquels le système réduit la fenêtre.
+      window.setMinimumSize(0, 0);
+      window.setContentSize(1008, 652);
+    });
+    await page.waitForFunction(() => innerWidth === 1008 && innerHeight === 652);
+    await page.locator('#algo-select').selectOption('lines');
+    report.layouts.push(await inspectControls('small-window-line-warp'));
+    await page.screenshot({ path: path.join(output, '04-small-window-palette.png') });
+    await page.locator('.panel').hover();
+    await page.mouse.wheel(0, -10000);
+    await page.waitForFunction(() => document.querySelector('.panel').scrollTop === 0);
+    await page.screenshot({ path: path.join(output, '05-small-window-controls.png') });
+    await page.locator('#algo-select').selectOption('halftone');
+    await app.evaluate(({ BrowserWindow }, bounds) => BrowserWindow.getAllWindows()[0].setBounds(bounds), originalBounds);
+    report.layoutFits = report.layouts.every(layout => layout.fits);
+    report.checks.push('scrollable-controls-and-palette-in-small-window');
     const png = path.join(runDir, 'export.png');
     await saveTo(png);
     const imageBytes = fs.readFileSync(png);

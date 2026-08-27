@@ -34,7 +34,7 @@ gh run download RUN_ID --repo louiswallet1993-crypto/Pxsize --pattern "PXSize-Wi
 node scripts/prepare-release.cjs --collect release/downloads release/publish
 ```
 
-Le script refuse une plateforme non autorisée, un ensemble incomplet, une fenêtre de test trop petite pour la palette, des fichiers inattendus, des doublons, un SHA incohérent ou une empreinte incorrecte. Le checkout doit être sur le commit exact testé. Le dossier de sortie doit être vide. Ne pas réutiliser les artefacts d'une autre exécution.
+Le script refuse une plateforme non autorisée, un ensemble incomplet, des contrôles inaccessibles dans la fenêtre de test, des fichiers inattendus, des doublons, un SHA incohérent ou une empreinte incorrecte. Le checkout doit être sur le commit exact testé. Le dossier de sortie doit être vide. Ne pas réutiliser les artefacts d'une autre exécution.
 
 ## 4. Publier
 

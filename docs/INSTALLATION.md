@@ -14,11 +14,11 @@ Cette version est prévue pour Windows 10 et 11 sur un PC 64 bits Intel ou AMD. 
 
 ## Mac ou Linux ?
 
-Ces versions ne sont pas encore proposées au téléchargement officiel. Les constructions et premiers tests existent, mais l'installation et certains points d'interface restent à valider. Le [suivi des plateformes](PLATFORMS.md) précise leur état ; les fichiers d'essai ne doivent pas être présentés comme une version prête à installer.
+Ces versions ne sont pas encore proposées au téléchargement officiel. Les constructions et premiers tests existent, mais l'installation sur un ordinateur utilisateur reste à valider. Le [suivi des plateformes](PLATFORMS.md) précise leur état ; les fichiers d'essai ne doivent pas être présentés comme une version prête à installer.
 
-## La palette est coupée ?
+## Où sont les autres réglages ?
 
-Agrandissez la fenêtre. Sur un écran de faible hauteur, une partie des réglages peut rester inaccessible : ce défaut d'interface est connu et doit être corrigé dans une prochaine version.
+Sur un petit écran, placez le pointeur sur les réglages à gauche et faites défiler avec la molette ou le pavé tactile. Vous pourrez atteindre les couleurs situées plus bas. Le bouton **EXPORT** reste visible sous cette zone. Vous pouvez aussi agrandir la fenêtre.
 
 ## Mettre à jour
 

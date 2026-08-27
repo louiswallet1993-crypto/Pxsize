@@ -14,6 +14,12 @@ const targets = {
   'darwin-x64': [`${prefix}-macOS-x64.dmg`],
   'linux-x64': [`${prefix}-Linux-x86_64.AppImage`, `${prefix}-Linux-x64.tar.gz`]
 };
+const targetLabels = {
+  'win32-x64': 'Windows 10 ou 11 — PC 64 bits Intel / AMD',
+  'darwin-arm64': 'Mac avec une puce Apple (M1, M2, M3…)',
+  'darwin-x64': 'Mac avec un processeur Intel',
+  'linux-x64': 'Linux — PC 64 bits Intel / AMD'
+};
 const publishedTargets = require('../.github/release-platforms.json');
 assert.ok(publishedTargets.length > 0 && publishedTargets.every(key => targets[key]), 'Plateformes de publication invalides');
 assert.equal(new Set(publishedTargets).size, publishedTargets.length, 'Plateformes en double');
@@ -71,12 +77,12 @@ if (process.argv[2] === '--collect') {
   }
   const notice = `PXSIZE ${version} — PAR RASTRO\n\n` +
     `QUEL FICHIER CHOISIR ?\n` +
-    publishedTargets.map(key => `${key} : ${targets[key].join(' / ')}`).join('\n') + '\n\n' +
+    publishedTargets.map(key => `${targetLabels[key]} : ${targets[key].join(' / ')}`).join('\n') + '\n\n' +
     `Glissez un fichier dans PXSize, choisissez un effet, puis cliquez sur EXPORT.\n` +
     `Images : PNG à leur taille d'origine. Vidéos : MP4 sans son, 30 images/s, largeur maximale 1100 pixels.\n\n` +
     `L'application n'est pas signée. Vérifiez sa provenance et ne désactivez pas vos protections.\n` +
     `Les versions Mac et Linux ne sont pas proposées dans la première release.\n` +
-    `Sur un petit écran, la palette peut être coupée : agrandissez la fenêtre.\n` +
+    `Sur un petit écran, faites défiler les réglages à gauche pour accéder à toute la palette.\n` +
     `Guide : https://github.com/louiswallet1993-crypto/Pxsize/blob/v${version}/docs/INSTALLATION.md\n` +
     `Aide : https://github.com/louiswallet1993-crypto/Pxsize/issues\n\n` +
     `Source code = code pour le développement, pas un installateur.\n` +
@@ -105,7 +111,7 @@ if (process.argv[2] === '--collect') {
   emptyDir(output);
   for (const { name } of assets) fs.copyFileSync(path.join(root, 'dist', name), path.join(output, name), fs.constants.COPYFILE_EXCL);
   fs.writeFileSync(path.join(output, `manifest-${key}.json`), JSON.stringify({ version, sha, platform: process.platform, arch: process.arch,
-    testsPassed: true, layoutFits: report.layoutFits, viewport: report.viewport,
+    testsPassed: true, layoutFits: report.layoutFits, viewport: report.viewport, layouts: report.layouts,
     checks: report.checks, completedAt: report.completedAt, assets }, null, 2) + '\n');
   console.log(`${key} : ${assets.length} livrable(s) vérifié(s).`);
 }

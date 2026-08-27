@@ -2,9 +2,9 @@
 
 <p align="center">Des images et des vidéos. Des pixels. Votre style.</p>
 
-<p align="center">
+<div align="center">
   <video src="https://github.com/user-attachments/assets/570825fd-7263-43b2-9f2e-c30e66964ac5" controls width="360"></video>
-</p>
+</div>
 
 <p align="center">
   <a href="https://github.com/louiswallet1993-crypto/Pxsize/releases/latest"><strong>Télécharger PXSize</strong></a>
@@ -42,7 +42,7 @@ Huit effets sont proposés, avec aperçu interactif, zoom, thème clair ou sombr
 - **Vidéos** : MP4, MOV, AVI et WebM, selon le format vidéo utilisé dans le fichier. Privilégiez un MP4 H.264 si une vidéo ne s'ouvre pas.
 - **Export vidéo** : MP4 à 30 images par seconde, **sans le son d'origine**, avec une largeur maximale de 1 100 pixels. Les longues vidéos peuvent demander du temps et de l'espace disque temporaire.
 - Les boutons de l'application sont en anglais : `SIZE` règle la taille du motif et `EXPORT` enregistre le résultat.
-- L'interface demande de la hauteur : une petite fenêtre peut masquer le bas de la palette. Agrandissez la fenêtre ; une amélioration de l'affichage sur petits écrans reste à faire.
+- Sur un petit écran, faites défiler les réglages à gauche pour accéder à toute la palette. Le bouton `EXPORT` reste visible en bas.
 
 ## Un souci ou une idée ?
 

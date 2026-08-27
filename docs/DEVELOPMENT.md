@@ -51,3 +51,15 @@ Les dépendances, compilations, secrets, notes de travail privées et maquettes 
 Cette initialisation conserve la base Electron 28 du projet fourni ; elle ne constitue pas un audit de sécurité. La mise à niveau d'Electron, l'isolation du renderer et la signature des applications doivent faire l'objet d'un chantier dédié avec tests de non-régression.
 
 La licence du code et des créations PXSize reste à préciser par leur titulaire. Aucune licence libre n'est attribuée par défaut à l'application. Les composants tiers conservent leurs propres licences : voir [les crédits](../THIRD_PARTY_NOTICES.md).
+
+## Présentation du dépôt sur GitHub
+
+Texte prêt à copier dans la fiche **À propos / About**, par le propriétaire du dépôt :
+
+> Transformez vos images et vidéos en points, pixels et lignes. Une application créative, locale et sans compte, par Rastro.
+
+**Site web :** [page de téléchargement](https://github.com/louiswallet1993-crypto/Pxsize/releases/latest).
+
+**Mots-clés :** `dithering`, `pixel-art`, `creative-coding`, `image-processing`, `video-processing`, `electron`, `desktop-app`.
+
+Ces champs se règlent sur GitHub et ne sont pas appliqués automatiquement par le code. Sur ce dépôt personnel, le compte collaborateur peut publier le code et les releases, mais la fiche du dépôt doit être modifiée par son propriétaire.

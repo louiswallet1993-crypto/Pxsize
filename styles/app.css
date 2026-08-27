@@ -49,8 +49,19 @@ body {
   position: absolute;
   left: 131px;
   top: 366px;
+  bottom: 100px;
   width: 300px;
+  padding: 2px 8px 2px 2px;
+  margin-left: -2px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
+
+/* Les réglages défilent au-dessus d'EXPORT, même avec une longue palette. */
+.panel::-webkit-scrollbar { width: 5px; }
+.panel::-webkit-scrollbar-thumb { background: var(--fg-soft); }
+.panel::-webkit-scrollbar-track { background: var(--fg-line); }
 
 .grp { margin-bottom: 22px; }
 
